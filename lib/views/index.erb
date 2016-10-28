@@ -1,0 +1,196 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <title>THERMOSTAT BITCH</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+    function Thermostat() {
+      this.defaultTemperature = 20;
+      this.temperature = this.defaultTemperature;
+      this.minimumTemperature = 10;
+      this.maxTempWithPowerSave = 25;
+      this.maxTempWithoutPowerSave = 32;
+      this.maximumTemperature = this.maxTempWithPowerSave;
+    }
+
+    Thermostat.prototype.raiseTemperature = function () {
+      this.temperature += 1;
+    };
+
+    Thermostat.prototype.lowerTemperature = function () {
+      this.temperature -= 0.5;
+    };
+
+    Thermostat.prototype.togglePowerSave = function () {
+      if (this.maximumTemperature === this.maxTempWithPowerSave) {
+          this.maximumTemperature = this.maxTempWithoutPowerSave;
+      }
+      else {
+        this.maximumTemperature = this.maxTempWithPowerSave;
+      }
+    };
+
+    Thermostat.prototype.resetTemperature = function () {
+      this.temperature = this.defaultTemperature;
+    };
+
+    Thermostat.prototype.energyUsage = function () {
+      if(this.temperature < 18) {
+        return 'low-usage';
+      }
+      else if(this.temperature > 17 && this.temperature < 25) {
+        return 'medium-usage';
+      }
+      else if(this.temperature > 24) {
+        return 'high-usage';
+      }
+    };
+
+    Thermostat.prototype.updateTemp = function () {
+      return thermostat.temperature;
+    };
+
+    var thermostat = new Thermostat();
+
+    $(document).ready(function () {
+
+      var city = "London";
+
+      // document.write(thermostat.updateTemp());
+      document.getElementById('tempupdate').innerHTML = thermostat.updateTemp();
+
+      $("#raise").click(function () {
+        thermostat.raiseTemperature();
+        document.getElementById('tempupdate').innerHTML = thermostat.updateTemp();
+      });
+
+      $("#lower").click(function () {
+        thermostat.lowerTemperature();
+        document.getElementById('tempupdate').innerHTML = thermostat.updateTemp();
+
+      });
+
+      $("#reset").click(function () {
+        thermostat.resetTemperature();
+        document.getElementById('tempupdate').innerHTML = thermostat.updateTemp();
+      });
+
+      $("#toggleEnergySaver").click(function () {
+        thermostat.togglePowerSave();
+      });
+
+      $('#London').click(function() {
+        city = 'London';
+        getData();
+      });
+
+      $('#Moscow').click(function() {
+        city = 'Moscow';
+        getData();
+      });
+
+      $('#Grimsby').click(function() {
+        city = 'Grimsby';
+        getData();
+      });
+
+      function getData() {
+        $.get("http://api.openweathermap.org/data/2.5/weather?q=" + city + "/id=524901&APPID=2a793cc57b61ac02fe9ef69d7f44e4f9", function(data) {
+          $('#bla').text(data.main.temp);
+          console.log(city);
+        });
+      }
+
+      getData();
+
+
+    });
+
+    </script>
+    <div class="thermostat">
+      <p>
+        THERMOSTAT
+      </p>
+      <div class="upperButtons">
+        <div class="up down buttons">
+          <button id="raise">^</button>
+          <p id="tempupdate">
+              0%
+          </p>
+          <button id="lower">V</button>
+        </div>
+      </div>
+      <div class="reset button">
+        <button id="reset" />
+      </div>
+      ENERGY SAVER BAR
+      <div class="toggle energy saver">
+        Toggle energy saver:
+        <button id="toggleEnergySaver" />
+      </div>
+      TEMPERATURE OUTSIDE:
+      <button id="London">LONDON</button>
+      <button id="Grimsby">Grimsby</button>
+      <button id="Moscow">moscow</button>
+      THE Temperature Is:
+      <div id="bla">
+
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+
+body {
+  background-color: #0D294F;
+  justify-content: center;
+  display: inline-block;
+  font-family: 'Alfa Slab One';
+}
+
+div {
+}
+
+input {
+  font-size: 18px;
+  border: 2px solid #476b6b;
+  color: white;
+  text-align: center;
+  text-decoration: none;\
+  display: inline-block;
+}
+
+input[type="text"] {
+  background-color: #f0f5f5;
+  color: black;
+}
+
+.thermostat {
+  background-color: beige;
+  justify-content: center;
+  text-align: center;
+  display: block;
+  height: 700px;
+  width: 500px;
+}
+
+.upperButtons {
+  margin: 20px;
+  display: inline-block;
+  border: 2px solid #476b6b;
+  width: 300px;
+}
+
+#bla {
+  width: 100%;
+  height: 100px;
+}
+
+button {
+  width: 100%;
+}
+
+
+</style>

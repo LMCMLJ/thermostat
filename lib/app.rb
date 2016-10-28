@@ -1,8 +1,10 @@
 require 'sinatra/base'
 
 class Thermostat < Sinatra::Base
+
+
   get '/' do
-    erb :thermostat
+    erb :index
   end
 
   # start the server if ruby file executed directly
